@@ -9,14 +9,22 @@ if (process.argv.length < 3) {
 }
 
 const filename = process.argv[2];
-const path = process.argv[3] || '/Users/johnhodgson/Downloads';
+const path = process.argv[3] || '/Users/Vicky/Downloads';
 
 fs.readFile(filename, 'utf8', function (err, data) {
   if (err) throw err;
   const json = JSON.parse(data);
-  const urlArr = json.map((item) => item.imgUrl);
+  const urlArr = json.map((item) => {
+    return {
+      videoUrl: item.videoUrl,
+      imgUrl: item.imgUrl,
+    };
+  });
   urlArr.forEach((url, i) => {
-    downloadFile(url, `${path}/image` + (parseInt(i) + 1) + '.jpg');
+    if (url.imgUrl)
+      downloadFile(url.imgUrl, `${path}/image` + (parseInt(i) + 1) + '.jpg');
+    if (url.videoUrl)
+      downloadFile(url.videoUrl, `${path}/video` + (parseInt(i) + 1) + '.mp4');
   });
 });
 
